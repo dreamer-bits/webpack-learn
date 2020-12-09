@@ -4,7 +4,6 @@ const {
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const history = require('connect-history-api-fallback');
-const convert = require('koa-connect');
 
 // 使用 WEBPACK_SERVE 环境变量检测当前是否是在 webpack-server 启动的开发环境中
 const dev = Boolean(process.env.NODE_ENV !== 'production');
@@ -152,27 +151,13 @@ module.exports = {
 并且带有热更新的功能，打代码时保存一下文件，浏览器会自动刷新。比 nginx 方便很多
 如果是修改 css, 甚至不需要刷新页面，直接生效。这让像弹框这种需要点击交互后才会出来的东西调试起来方便很多。
 
-因为 webpack-cli 无法正确识别 serve 选项，使用 webpack-cli 执行打包时会报错。
-因此我们在这里判断一下，仅当使用 webpack-serve 时插入 serve 选项。
+因为 webpack-cli 无法正确识别 devServe 选项，使用 webpack-cli 执行打包时会报错。
+因此我们在这里判断一下，仅当使用 webpack-dev-server 时插入 devServe 选项。
 issue：https://github.com/webpack-contrib/webpack-serve/issues/19
 */
 if (dev) {
   module.exports.devServer = {
     // 配置监听端口，默认值 8080
     port: 8889
-
-    // add: 用来给服务器的 koa 实例注入 middleware 增加功能
-    // add: app => {
-    //   /*
-    //   配置 SPA 入口
-
-    //   SPA 的入口是一个统一的 html 文件，比如
-    //   http://localhost:8080/foo
-    //   我们要返回给它
-    //   http://localhost:8080/index.html
-    //   这个文件
-    //   */
-    //   app.use(convert(history()));
-    // }
   };
 }
